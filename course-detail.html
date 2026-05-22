@@ -1,0 +1,1208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Details - LearningPath AI</title>
+    
+    <!-- Redirect to login if not authenticated -->
+    <script>
+        if (!localStorage.getItem('userId')) {
+            window.location.href = 'profile.html';
+        }
+    </script>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --primary-light: #818cf8;
+            --secondary-color: #a855f7;
+            --dark-bg: #090d16;
+            --card-bg: rgba(255, 255, 255, 0.04);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --text-muted: #a3b3c9;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: radial-gradient(circle at 50% 0%, #1e1b4b 0%, var(--dark-bg) 70%);
+            color: #e2e8f0;
+            min-height: 100vh;
+            padding-bottom: 4rem;
+        }
+
+        /* Ensure all text is visible */
+        * {
+            color: inherit;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            color: #ffffff;
+        }
+
+        p, span, div, label {
+            color: #cbd5e1;
+        }
+
+        .navbar {
+            background: rgba(9, 13, 22, 0.7);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+        }
+
+        .navbar-brand {
+            font-weight: 800;
+            font-size: 1.6rem;
+            background: linear-gradient(135deg, var(--primary-light), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-link {
+            font-weight: 600;
+            color: #cbd5e1 !important;
+            margin: 0 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-light) !important;
+        }
+
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
+            margin-bottom: 2rem;
+        }
+
+        .card-header {
+            background: transparent;
+            border-bottom: 1px solid var(--border-color);
+            padding: 1.5rem 2rem;
+        }
+
+        .card-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #ffffff;
+            margin: 0;
+        }
+
+        .card-body {
+            padding: 2rem;
+            color: #e2e8f0;
+        }
+
+        .card-body h3,
+        .card-body h4,
+        .card-body h5 {
+            color: #ffffff;
+        }
+
+        .card-body p {
+            color: #cbd5e1;
+        }
+
+        #overviewContent,
+        #overviewContent p,
+        #fullDescription {
+            color: #cbd5e1 !important;
+            font-size: 1rem;
+            line-height: 1.7;
+        }
+
+        #skillsList {
+            margin-top: 1rem;
+        }
+
+        .course-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            padding: 3rem 2rem;
+            border-radius: 24px;
+            margin-bottom: 2rem;
+        }
+
+        .course-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+
+        .course-meta {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+            margin-top: 1.5rem;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .btn-primary-custom {
+            background: linear-gradient(135deg, var(--success-color), #059669);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
+            color: white;
+        }
+
+        .btn-generate {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-generate:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4);
+            color: white;
+        }
+
+        .btn-level-up {
+            background: linear-gradient(135deg, var(--secondary-color), #9333ea);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-level-up:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(168, 85, 247, 0.4);
+            color: white;
+        }
+
+        .btn-outline-light {
+            background: transparent;
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-light:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.5);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .tab-content {
+            padding: 2rem 0;
+        }
+
+        .nav-tabs {
+            border-bottom: 2px solid var(--border-color);
+            margin-bottom: 2rem;
+        }
+
+        .nav-tabs .nav-link {
+            color: var(--text-muted);
+            border: none;
+            padding: 1rem 1.5rem;
+            font-weight: 600;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .nav-tabs .nav-link:hover {
+            color: var(--primary-light);
+            border-bottom-color: var(--primary-light);
+        }
+
+        .nav-tabs .nav-link.active {
+            color: var(--primary-light);
+            background: transparent;
+            border-bottom-color: var(--primary-light);
+        }
+
+        .notes-section {
+            line-height: 1.8;
+            color: #e2e8f0;
+        }
+
+        .notes-section h4 {
+            color: #ffffff;
+            font-weight: 700;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .notes-section h5 {
+            color: #cbd5e1;
+            font-weight: 600;
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .notes-section p {
+            color: #cbd5e1;
+            margin-bottom: 1rem;
+            line-height: 1.8;
+        }
+
+        .notes-section .lead {
+            font-size: 1.1rem;
+            color: #e2e8f0;
+            font-weight: 500;
+        }
+
+        .concept-card {
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .concept-title {
+            font-weight: 700;
+            color: var(--primary-light);
+            font-size: 1.2rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .concept-card p {
+            color: #cbd5e1;
+            margin-bottom: 0.75rem;
+            line-height: 1.7;
+        }
+
+        .concept-card .text-muted {
+            color: #94a3b8 !important;
+            font-size: 0.95rem;
+        }
+
+        .quiz-question {
+            background: rgba(168, 85, 247, 0.1);
+            border: 1px solid rgba(168, 85, 247, 0.2);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .quiz-question h5 {
+            color: #ffffff;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .quiz-question p {
+            color: #e2e8f0;
+            font-size: 1.05rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .quiz-option {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1rem 1.25rem;
+            margin: 0.75rem 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #e2e8f0;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .quiz-option label {
+            color: #e2e8f0;
+            cursor: pointer;
+            margin-left: 0.5rem;
+            flex: 1;
+        }
+
+        .quiz-option input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .quiz-option:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--primary-light);
+            transform: translateX(5px);
+        }
+
+        .quiz-option.selected {
+            background: rgba(99, 102, 241, 0.2);
+            border-color: var(--primary-light);
+            border-width: 2px;
+        }
+
+        .quiz-option.correct {
+            background: rgba(16, 185, 129, 0.2);
+            border-color: var(--success-color);
+            border-width: 2px;
+        }
+
+        .quiz-option.correct label {
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        .quiz-option.incorrect {
+            background: rgba(239, 68, 68, 0.2);
+            border-color: #ef4444;
+            border-width: 2px;
+        }
+
+        .quiz-option.incorrect label {
+            color: #fca5a5;
+        }
+
+        .loading-spinner {
+            text-align: center;
+            padding: 3rem;
+            color: #cbd5e1;
+        }
+
+        .loading-spinner p {
+            color: #cbd5e1;
+            margin-top: 1rem;
+        }
+
+        .spinner-border {
+            width: 3rem;
+            height: 3rem;
+            border-width: 0.3rem;
+        }
+
+        .quiz-section h4,
+        .quiz-section h5 {
+            color: #ffffff;
+        }
+
+        .explanation {
+            margin-top: 1rem;
+        }
+
+        .explanation .alert {
+            background: rgba(59, 130, 246, 0.15);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            color: #e2e8f0;
+            border-radius: 12px;
+            padding: 1rem 1.25rem;
+        }
+
+        .explanation .alert strong {
+            color: #ffffff;
+        }
+
+        .badge-custom {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .badge-beginner {
+            background: rgba(239, 68, 68, 0.15);
+            color: #f87171;
+        }
+
+        .badge-intermediate {
+            background: rgba(245, 158, 11, 0.15);
+            color: #fbbf24;
+        }
+
+        .badge-advanced {
+            background: rgba(99, 102, 241, 0.15);
+            color: #818cf8;
+        }
+
+        .objective-item {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border-color);
+            color: #cbd5e1;
+            font-size: 1rem;
+        }
+
+        .objective-item:last-child {
+            border-bottom: none;
+        }
+
+        .objective-item i {
+            color: var(--success-color);
+        }
+
+        .tip-card {
+            background: rgba(16, 185, 129, 0.1);
+            border-left: 4px solid var(--success-color);
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            margin: 0.5rem 0;
+            color: #cbd5e1;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .notes-section a {
+            color: var(--primary-light);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .notes-section a:hover {
+            color: var(--secondary-color);
+            text-decoration: underline;
+        }
+
+        .resource-link {
+            display: block;
+            padding: 0.75rem 1rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            margin: 0.5rem 0;
+            transition: all 0.3s ease;
+            color: #cbd5e1;
+        }
+
+        .resource-link:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: var(--primary-light);
+            transform: translateX(5px);
+        }
+
+        .score-display {
+            background: linear-gradient(135deg, var(--success-color), #059669);
+            color: white;
+            padding: 2rem;
+            border-radius: 16px;
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .score-value {
+            font-size: 3rem;
+            font-weight: 800;
+            font-family: 'Outfit', sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="bi bi-graph-up-arrow"></i> LearningPath AI
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="learning-path.html">
+                            <i class="bi bi-arrow-left"></i> Back to Learning Path
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Course Header -->
+        <div class="course-header" id="courseHeader">
+            <h1 class="course-title" id="courseTitle">Loading...</h1>
+            <p class="mb-0" id="courseDescription">Loading course details...</p>
+            <div class="course-meta" id="courseMeta">
+                <!-- Meta info will be inserted here -->
+            </div>
+            
+            <!-- Current Progress Display -->
+            <div class="mt-3" id="progressDisplay" style="display: none;">
+                <div style="background: rgba(255,255,255,0.1); padding: 1rem; border-radius: 12px; max-width: 400px;">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span style="font-weight: 600;">Current Progress:</span>
+                        <span id="currentProgressText" style="font-weight: 700; font-size: 1.1rem;">0%</span>
+                    </div>
+                    <div class="progress" style="height: 10px; border-radius: 10px; background: rgba(255,255,255,0.2);">
+                        <div id="currentProgressBar" class="progress-bar" style="width: 0%; background: linear-gradient(90deg, #6366f1, #a855f7); border-radius: 10px;"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-3">
+                <a href="#" class="btn btn-primary-custom" id="courseLink" target="_blank">
+                    <i class="bi bi-box-arrow-up-right"></i> Open Course
+                </a>
+                <button class="btn btn-level-up ms-2" id="markCompleteBtn" onclick="markCourseComplete()">
+                    <i class="bi bi-check-circle"></i> Mark as Completed
+                </button>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <ul class="nav nav-tabs" id="courseTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="overview-tab" data-bs-toggle="tab" data-bs-target="#overview" type="button">
+                    <i class="bi bi-info-circle"></i> Overview
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="notes-tab" data-bs-toggle="tab" data-bs-target="#notes" type="button">
+                    <i class="bi bi-journal-text"></i> AI Notes
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="quiz-tab" data-bs-toggle="tab" data-bs-target="#quiz" type="button">
+                    <i class="bi bi-question-circle"></i> AI Quiz
+                </button>
+            </li>
+        </ul>
+
+        <!-- Tab Content -->
+        <div class="tab-content" id="courseTabContent">
+            <!-- Overview Tab -->
+            <div class="tab-pane fade show active" id="overview" role="tabpanel">
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="mb-4">Course Overview</h3>
+                        <div id="overviewContent">
+                            <p id="fullDescription">Loading...</p>
+                            <h4 class="mt-4 mb-3">Skills Covered</h4>
+                            <div id="skillsList"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notes Tab -->
+            <div class="tab-pane fade" id="notes" role="tabpanel">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h3 class="card-title">AI-Generated Study Notes</h3>
+                        <button class="btn btn-generate" id="generateNotesBtn">
+                            <i class="bi bi-stars"></i> Generate Notes
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div id="notesContent">
+                            <div class="text-center text-muted py-5">
+                                <i class="bi bi-journal-text" style="font-size: 3rem; opacity: 0.3; color: #64748b;"></i>
+                                <p class="mt-3" style="color: #94a3b8; font-size: 1.05rem;">Click "Generate Notes" to create AI-powered study notes for this course</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quiz Tab -->
+            <div class="tab-pane fade" id="quiz" role="tabpanel">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h3 class="card-title">AI-Generated Quiz</h3>
+                        <button class="btn btn-generate" id="generateQuizBtn">
+                            <i class="bi bi-stars"></i> Generate Quiz
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div id="quizContent">
+                            <div class="text-center text-muted py-5">
+                                <i class="bi bi-question-circle" style="font-size: 3rem; opacity: 0.3; color: #64748b;"></i>
+                                <p class="mt-3" style="color: #94a3b8; font-size: 1.05rem;">Click "Generate Quiz" to create an AI-powered quiz for this course</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Google Analytics Module -->
+    <script type="module">
+        import { trackQuizGenerated, trackQuizComplete, trackNotesGenerated, trackCourseComplete } from './analytics.js';
+        
+        // Make tracking functions available globally
+        window.trackQuizGenerated = trackQuizGenerated;
+        window.trackQuizComplete = trackQuizComplete;
+        window.trackNotesGenerated = trackNotesGenerated;
+        window.trackCourseComplete = trackCourseComplete;
+    </script>
+    
+    <!-- Custom JavaScript -->
+    <script>
+        // Auto-detect API base URL (works for both local and Vercel)
+        const API_BASE = window.location.hostname === 'localhost' 
+            ? 'http://localhost:5000' 
+            : window.location.origin + '/api';
+        
+        console.log('API Base URL:', API_BASE);
+        
+        let currentCourse = null;
+        let quizAnswers = {};
+
+        // Load course details from URL parameters
+        function loadCourseDetails() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const courseData = urlParams.get('course');
+            
+            if (!courseData) {
+                alert('No course selected');
+                window.location.href = 'learning-path.html';
+                return;
+            }
+
+            try {
+                currentCourse = JSON.parse(decodeURIComponent(courseData));
+                displayCourseDetails();
+            } catch (e) {
+                console.error('Error parsing course data:', e);
+                alert('Invalid course data');
+                window.location.href = 'learning-path.html';
+            }
+        }
+
+        // Display course details
+        function displayCourseDetails() {
+            document.getElementById('courseTitle').textContent = currentCourse.title;
+            document.getElementById('courseDescription').textContent = currentCourse.description || 'No description available';
+            document.getElementById('fullDescription').textContent = currentCourse.description || 'No description available';
+            document.getElementById('courseLink').href = currentCourse.url;
+
+            // Meta information
+            const levelClass = currentCourse.level.toLowerCase();
+            const metaHTML = `
+                <div class="meta-item">
+                    <i class="bi bi-building"></i>
+                    <span>${currentCourse.provider}</span>
+                </div>
+                <div class="meta-item">
+                    <span class="badge-custom badge-${levelClass}">${currentCourse.level}</span>
+                </div>
+                <div class="meta-item">
+                    <i class="bi bi-clock"></i>
+                    <span>${currentCourse.duration}</span>
+                </div>
+            `;
+            document.getElementById('courseMeta').innerHTML = metaHTML;
+
+            // Skills covered
+            const skills = currentCourse.skills_covered || [];
+            const skillsHTML = skills.map(skill => 
+                `<span class="badge bg-primary me-2 mb-2" style="font-size: 0.9rem; padding: 0.5rem 1rem;">${skill}</span>`
+            ).join('');
+            document.getElementById('skillsList').innerHTML = skillsHTML || '<p class="text-muted">No skills listed</p>';
+        }
+
+        // Generate AI Notes
+        async function generateNotes() {
+            const btn = document.getElementById('generateNotesBtn');
+            const content = document.getElementById('notesContent');
+            
+            btn.disabled = true;
+            btn.innerHTML = '<i class="bi bi-hourglass-split"></i> Generating...';
+            
+            content.innerHTML = `
+                <div class="loading-spinner">
+                    <div class="spinner-border text-primary" role="status"></div>
+                    <p class="mt-3">AI is generating comprehensive study notes...</p>
+                </div>
+            `;
+
+            try {
+                const response = await fetch(`${API_BASE}/ai-generate-notes`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        topic: currentCourse.title,
+                        level: currentCourse.level.toLowerCase()
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    displayNotes(result.notes);
+                    
+                    // Track notes generation
+                    if (window.trackNotesGenerated) {
+                        window.trackNotesGenerated(currentCourse.title, currentCourse.level.toLowerCase());
+                    }
+                } else {
+                    throw new Error(result.error || 'Failed to generate notes');
+                }
+            } catch (error) {
+                console.error('Error generating notes:', error);
+                content.innerHTML = `
+                    <div class="alert alert-danger">
+                        <i class="bi bi-exclamation-triangle"></i>
+                        Failed to generate notes. Please try again.
+                    </div>
+                `;
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="bi bi-stars"></i> Regenerate Notes';
+            }
+        }
+
+        // Display notes
+        function displayNotes(notes) {
+            const content = document.getElementById('notesContent');
+            
+            let html = `
+                <div class="notes-section">
+                    <h4 class="mb-3">${notes.topic}</h4>
+                    <p class="lead">${notes.summary}</p>
+                    
+                    <h5 class="mt-4 mb-3">Learning Objectives</h5>
+                    <div class="mb-4">
+                        ${notes.learning_objectives.map(obj => 
+                            `<div class="objective-item"><i class="bi bi-check-circle text-success me-2"></i>${obj}</div>`
+                        ).join('')}
+                    </div>
+
+                    <h5 class="mt-4 mb-3">Key Concepts</h5>
+                    ${notes.key_concepts.map(concept => `
+                        <div class="concept-card">
+                            <div class="concept-title">${concept.concept}</div>
+                            <p class="mb-2">${concept.explanation}</p>
+                            <div class="text-muted"><strong>Example:</strong> ${concept.example}</div>
+                        </div>
+                    `).join('')}
+
+                    <h5 class="mt-4 mb-3">Practice Exercises</h5>
+                    ${notes.practice_exercises.map((ex, i) => `
+                        <div class="concept-card">
+                            <div class="concept-title">Exercise ${i + 1} (${ex.difficulty})</div>
+                            <p class="mb-2">${ex.exercise}</p>
+                            <div class="text-muted"><i class="bi bi-lightbulb"></i> <strong>Hint:</strong> ${ex.hint}</div>
+                        </div>
+                    `).join('')}
+
+                    <h5 class="mt-4 mb-3">Study Tips</h5>
+                    ${notes.tips.map(tip => `
+                        <div class="tip-card">
+                            <i class="bi bi-star-fill text-warning me-2"></i>${tip}
+                        </div>
+                    `).join('')}
+
+                    <h5 class="mt-4 mb-3">Additional Resources</h5>
+                    ${notes.additional_resources.map(resource => `
+                        <a href="${resource.url}" target="_blank" class="resource-link text-decoration-none">
+                            <i class="bi bi-link-45deg me-2"></i>
+                            <strong>${resource.title}</strong>
+                            <span class="text-muted ms-2">(${resource.type})</span>
+                        </a>
+                    `).join('')}
+                </div>
+            `;
+            
+            content.innerHTML = html;
+        }
+
+        // Generate AI Quiz
+        async function generateQuiz() {
+            const btn = document.getElementById('generateQuizBtn');
+            const content = document.getElementById('quizContent');
+            
+            btn.disabled = true;
+            btn.innerHTML = '<i class="bi bi-hourglass-split"></i> Generating...';
+            
+            content.innerHTML = `
+                <div class="loading-spinner">
+                    <div class="spinner-border text-primary" role="status"></div>
+                    <p class="mt-3">AI is generating a quiz to test your knowledge...</p>
+                </div>
+            `;
+
+            try {
+                const response = await fetch(`${API_BASE}/ai-generate-quiz`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        topic: currentCourse.title,
+                        level: currentCourse.level.toLowerCase()
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    displayQuiz(result.quiz);
+                    
+                    // Track quiz generation
+                    if (window.trackQuizGenerated) {
+                        window.trackQuizGenerated(currentCourse.title, currentCourse.level.toLowerCase());
+                    }
+                } else {
+                    throw new Error(result.error || 'Failed to generate quiz');
+                }
+            } catch (error) {
+                console.error('Error generating quiz:', error);
+                content.innerHTML = `
+                    <div class="alert alert-danger">
+                        <i class="bi bi-exclamation-triangle"></i>
+                        Failed to generate quiz. Please try again.
+                    </div>
+                `;
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="bi bi-stars"></i> Regenerate Quiz';
+            }
+        }
+
+        // Display quiz
+        function displayQuiz(quiz) {
+            const content = document.getElementById('quizContent');
+            quizAnswers = {};
+            
+            let html = `
+                <div class="quiz-section">
+                    <h4 class="mb-4" style="color: #ffffff;">${quiz.title}</h4>
+                    ${quiz.questions.map((q, qIndex) => `
+                        <div class="quiz-question" id="question-${qIndex}">
+                            <h5 class="mb-3" style="color: #ffffff;">Question ${qIndex + 1}</h5>
+                            <p class="mb-3" style="color: #e2e8f0; font-size: 1.05rem;">${q.question}</p>
+                            <div class="options">
+                                ${q.options.map((option, oIndex) => `
+                                    <div class="quiz-option" onclick="selectOption(${qIndex}, ${oIndex}, '${option.replace(/'/g, "\\'")}')">
+                                        <input type="radio" name="q${qIndex}" id="q${qIndex}o${oIndex}" class="me-2">
+                                        <label for="q${qIndex}o${oIndex}" style="color: #e2e8f0;">${option}</label>
+                                    </div>
+                                `).join('')}
+                            </div>
+                            <div class="explanation mt-3 d-none" id="explanation-${qIndex}">
+                                <div class="alert alert-info">
+                                    <strong style="color: #ffffff;">Explanation:</strong> 
+                                    <span style="color: #e2e8f0;">${q.explanation}</span>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('')}
+                    
+                    <div class="text-center mt-4">
+                        <button class="btn btn-primary-custom" onclick="submitQuiz(${JSON.stringify(quiz).replace(/"/g, '&quot;')})">
+                            <i class="bi bi-check-circle"></i> Submit Quiz
+                        </button>
+                    </div>
+                    
+                    <div id="quizResults" class="d-none"></div>
+                </div>
+            `;
+            
+            content.innerHTML = html;
+        }
+
+        // Select quiz option
+        function selectOption(questionIndex, optionIndex, optionText) {
+            quizAnswers[questionIndex] = optionText;
+            
+            // Update UI
+            const question = document.getElementById(`question-${questionIndex}`);
+            const options = question.querySelectorAll('.quiz-option');
+            options.forEach((opt, idx) => {
+                opt.classList.remove('selected');
+                if (idx === optionIndex) {
+                    opt.classList.add('selected');
+                    opt.querySelector('input').checked = true;
+                }
+            });
+        }
+
+        // Submit quiz
+        function submitQuiz(quiz) {
+            let correct = 0;
+            const total = quiz.questions.length;
+
+            quiz.questions.forEach((q, index) => {
+                const userAnswer = quizAnswers[index];
+                const isCorrect = userAnswer === q.correct_answer;
+                
+                if (isCorrect) correct++;
+
+                // Show explanation
+                document.getElementById(`explanation-${index}`).classList.remove('d-none');
+
+                // Highlight correct/incorrect
+                const question = document.getElementById(`question-${index}`);
+                const options = question.querySelectorAll('.quiz-option');
+                options.forEach(opt => {
+                    const label = opt.querySelector('label').textContent;
+                    if (label === q.correct_answer) {
+                        opt.classList.add('correct');
+                    } else if (label === userAnswer && !isCorrect) {
+                        opt.classList.add('incorrect');
+                    }
+                });
+            });
+
+            // Show results
+            const percentage = Math.round((correct / total) * 100);
+            
+            // Track quiz completion
+            if (window.trackQuizComplete) {
+                window.trackQuizComplete(currentCourse.title, correct, total);
+            }
+            
+            const resultsHTML = `
+                <div class="score-display">
+                    <h3>Quiz Results</h3>
+                    <div class="score-value">${correct}/${total}</div>
+                    <p class="mb-0">${percentage}% Correct</p>
+                    <p class="mt-3">${percentage >= 80 ? '🎉 Excellent work!' : percentage >= 60 ? '👍 Good job!' : '📚 Keep studying!'}</p>
+                </div>
+            `;
+            
+            document.getElementById('quizResults').innerHTML = resultsHTML;
+            document.getElementById('quizResults').classList.remove('d-none');
+
+            // Scroll to results
+            document.getElementById('quizResults').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Event listeners
+        document.getElementById('generateNotesBtn').addEventListener('click', generateNotes);
+        document.getElementById('generateQuizBtn').addEventListener('click', generateQuiz);
+
+        // Mark course as completed
+        async function markCourseComplete() {
+            const userId = localStorage.getItem('userId');
+            if (!userId) {
+                alert('Please log in to track your progress');
+                return;
+            }
+
+            const btn = document.getElementById('markCompleteBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="bi bi-hourglass-split"></i> Saving...';
+
+            try {
+                // Update progress in backend
+                const response = await fetch(`${API_BASE}/update-progress`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        userId: userId,
+                        courseProgress: [{
+                            title: currentCourse.title,
+                            progress: 100
+                        }]
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    // Update completed courses list
+                    let completedCourses = JSON.parse(localStorage.getItem('completedCourses') || '[]');
+                    if (!completedCourses.includes(currentCourse.title)) {
+                        completedCourses.push(currentCourse.title);
+                        localStorage.setItem('completedCourses', JSON.stringify(completedCourses));
+                    }
+                    
+                    // Update course progress
+                    let courseProgress = JSON.parse(localStorage.getItem('courseProgress') || '{}');
+                    courseProgress[currentCourse.title] = 100;
+                    localStorage.setItem('courseProgress', JSON.stringify(courseProgress));
+                    
+                    // Track course completion
+                    if (window.trackCourseComplete) {
+                        window.trackCourseComplete(currentCourse.title, currentCourse.provider);
+                    }
+
+                    // Show success message
+                    btn.innerHTML = '<i class="bi bi-check-circle-fill"></i> Completed!';
+                    btn.classList.remove('btn-level-up');
+                    btn.classList.add('btn-success');
+                    
+                    // Show congratulations
+                    alert('🎉 Congratulations! Course marked as completed. Check your skill progression page to see if you can level up!');
+                    
+                    // Redirect to skill progression after 2 seconds
+                    setTimeout(() => {
+                        window.location.href = 'skill-progression.html';
+                    }, 2000);
+                } else {
+                    throw new Error(result.error || 'Failed to update progress');
+                }
+            } catch (error) {
+                console.error('Error marking course complete:', error);
+                alert('Failed to mark course as complete. Please try again.');
+                btn.disabled = false;
+                btn.innerHTML = '<i class="bi bi-check-circle"></i> Mark as Completed';
+            }
+        }
+
+        // Update course progress (for partial completion)
+        async function updateCourseProgress(progressPercent) {
+            const userId = localStorage.getItem('userId');
+            if (!userId) {
+                alert('Please log in to track your progress');
+                return;
+            }
+
+            try {
+                // Update progress in backend
+                const response = await fetch(`${API_BASE}/update-progress`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        userId: userId,
+                        courseProgress: [{
+                            title: currentCourse.title,
+                            progress: progressPercent
+                        }]
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    // Update course progress in localStorage
+                    let courseProgress = JSON.parse(localStorage.getItem('courseProgress') || '{}');
+                    courseProgress[currentCourse.title] = progressPercent;
+                    localStorage.setItem('courseProgress', JSON.stringify(courseProgress));
+
+                    // Update progress display
+                    updateProgressDisplay(progressPercent);
+
+                    // Show success message
+                    alert(`✅ Progress updated to ${progressPercent}%!`);
+                } else {
+                    throw new Error(result.error || 'Failed to update progress');
+                }
+            } catch (error) {
+                console.error('Error updating progress:', error);
+                alert('Failed to update progress. Please try again.');
+            }
+        }
+
+        // Check if course is already completed
+        function checkCourseCompletion() {
+            const completedCourses = JSON.parse(localStorage.getItem('completedCourses') || '[]');
+            const courseProgress = JSON.parse(localStorage.getItem('courseProgress') || '{}');
+            
+            // Update progress display
+            const currentProgress = courseProgress[currentCourse.title] || 0;
+            updateProgressDisplay(currentProgress);
+            
+            if (completedCourses.includes(currentCourse.title)) {
+                const btn = document.getElementById('markCompleteBtn');
+                btn.innerHTML = '<i class="bi bi-check-circle-fill"></i> Completed';
+                btn.classList.remove('btn-level-up');
+                btn.classList.add('btn-success');
+                btn.disabled = true;
+            } else if (courseProgress[currentCourse.title]) {
+                // Show current progress
+                const progress = courseProgress[currentCourse.title];
+                console.log(`Current progress for ${currentCourse.title}: ${progress}%`);
+            }
+        }
+        
+        // Update progress display
+        function updateProgressDisplay(progress) {
+            const progressDisplay = document.getElementById('progressDisplay');
+            const progressText = document.getElementById('currentProgressText');
+            const progressBar = document.getElementById('currentProgressBar');
+            
+            if (progress > 0) {
+                progressDisplay.style.display = 'block';
+                progressText.textContent = `${progress}%`;
+                progressBar.style.width = `${progress}%`;
+                
+                // Change color based on progress
+                if (progress === 100) {
+                    progressBar.style.background = 'linear-gradient(90deg, #10b981, #059669)';
+                } else {
+                    progressBar.style.background = 'linear-gradient(90deg, #6366f1, #a855f7)';
+                }
+            } else {
+                progressDisplay.style.display = 'none';
+            }
+        }
+
+        // Initialize
+        loadCourseDetails();
+        setTimeout(checkCourseCompletion, 500);
+        
+        // IMMEDIATE FIX: Clean corrupted progress data on page load
+        (function cleanProgressData() {
+            try {
+                let courseProgress = JSON.parse(localStorage.getItem('courseProgress') || '{}');
+                let cleaned = false;
+                
+                // Check each course progress value
+                for (const [courseName, progress] of Object.entries(courseProgress)) {
+                    const numProgress = Number(progress);
+                    // If progress is invalid or somehow set to 50 without user action, reset to 0
+                    if (isNaN(numProgress) || numProgress < 0 || numProgress > 100) {
+                        console.warn(`Cleaning invalid progress for "${courseName}": ${progress} -> 0`);
+                        courseProgress[courseName] = 0;
+                        cleaned = true;
+                    }
+                }
+                
+                // Save cleaned data
+                if (cleaned) {
+                    localStorage.setItem('courseProgress', JSON.stringify(courseProgress));
+                    console.log('✅ Progress data cleaned');
+                }
+            } catch (e) {
+                console.error('Error cleaning progress data:', e);
+                // Reset to empty if there's an error
+                localStorage.setItem('courseProgress', JSON.stringify({}));
+            }
+        })();
+    </script>
+</body>
+</html>

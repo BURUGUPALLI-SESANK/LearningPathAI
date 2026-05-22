@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fix Progress Issue - LearningPath AI</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+        .fix-container {
+            background: white;
+            border-radius: 24px;
+            padding: 3rem;
+            max-width: 600px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+        .fix-icon {
+            font-size: 4rem;
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+        .btn-fix {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+        .btn-fix:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+            color: white;
+        }
+        .status-box {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            display: none;
+        }
+        .status-box.show {
+            display: block;
+        }
+        .status-box.success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        .status-box.error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <div class="fix-container text-center">
+        <i class="bi bi-tools fix-icon"></i>
+        <h1 class="mb-3">Fix Progress Issue</h1>
+        <p class="text-muted mb-4">
+            If your courses are showing 50% progress at the start, click the button below to reset all progress data to 0%.
+        </p>
+        
+        <div class="alert alert-warning mb-4">
+            <i class="bi bi-exclamation-triangle"></i>
+            <strong>Warning:</strong> This will reset ALL course progress to 0%. Any existing progress will be lost.
+        </div>
+        
+        <button class="btn btn-fix" onclick="fixProgress()">
+            <i class="bi bi-arrow-clockwise"></i> Fix Progress Now
+        </button>
+        
+        <div id="statusBox" class="status-box">
+            <div id="statusMessage"></div>
+        </div>
+        
+        <div class="mt-4">
+            <a href="learning-path.html" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left"></i> Back to Learning Path
+            </a>
+        </div>
+        
+        <hr class="my-4">
+        
+        <div class="text-start">
+            <h5>What this does:</h5>
+            <ul class="text-muted">
+                <li>Clears corrupted progress data</li>
+                <li>Resets all courses to 0% progress</li>
+                <li>Removes all completion badges</li>
+                <li>Reinitializes with clean data</li>
+            </ul>
+            
+            <h5 class="mt-3">After fixing:</h5>
+            <ul class="text-muted">
+                <li>All courses will show 0% progress</li>
+                <li>You can track progress normally</li>
+                <li>50% and 100% buttons will work correctly</li>
+            </ul>
+        </div>
+    </div>
+    
+    <script>
+        function fixProgress() {
+            const statusBox = document.getElementById('statusBox');
+            const statusMessage = document.getElementById('statusMessage');
+            
+            try {
+                // Get current data for logging
+                const oldProgress = localStorage.getItem('courseProgress');
+                const oldCompleted = localStorage.getItem('completedCourses');
+                
+                console.log('Old Progress Data:', oldProgress);
+                console.log('Old Completed Data:', oldCompleted);
+                
+                // Clear corrupted data
+                localStorage.removeItem('courseProgress');
+                localStorage.removeItem('completedCourses');
+                
+                // Reinitialize with clean empty objects
+                localStorage.setItem('courseProgress', JSON.stringify({}));
+                localStorage.setItem('completedCourses', JSON.stringify([]));
+                
+                // Show success message
+                statusBox.className = 'status-box show success';
+                statusMessage.innerHTML = `
+                    <i class="bi bi-check-circle-fill"></i>
+                    <strong>Success!</strong> Progress data has been reset to 0%.
+                    <br><br>
+                    Redirecting to Learning Path in 3 seconds...
+                `;
+                
+                // Redirect after 3 seconds
+                setTimeout(() => {
+                    window.location.href = 'learning-path.html';
+                }, 3000);
+                
+            } catch (error) {
+                console.error('Error fixing progress:', error);
+                
+                // Show error message
+                statusBox.className = 'status-box show error';
+                statusMessage.innerHTML = `
+                    <i class="bi bi-x-circle-fill"></i>
+                    <strong>Error!</strong> Failed to reset progress data.
+                    <br><br>
+                    Error: ${error.message}
+                    <br><br>
+                    Please try clearing your browser cache manually.
+                `;
+            }
+        }
+        
+        // Check current status on load
+        window.addEventListener('DOMContentLoaded', () => {
+            const progress = JSON.parse(localStorage.getItem('courseProgress') || '{}');
+            const completed = JSON.parse(localStorage.getItem('completedCourses') || '[]');
+            
+            console.log('Current Progress:', progress);
+            console.log('Current Completed:', completed);
+            
+            // Check if there's any data
+            const hasProgress = Object.keys(progress).length > 0;
+            const hasCompleted = completed.length > 0;
+            
+            if (!hasProgress && !hasCompleted) {
+                const statusBox = document.getElementById('statusBox');
+                const statusMessage = document.getElementById('statusMessage');
+                
+                statusBox.className = 'status-box show';
+                statusBox.style.background = '#d1ecf1';
+                statusBox.style.border = '1px solid #bee5eb';
+                statusBox.style.color = '#0c5460';
+                
+                statusMessage.innerHTML = `
+                    <i class="bi bi-info-circle-fill"></i>
+                    <strong>Info:</strong> No progress data found. Your courses should already be at 0%.
+                `;
+            }
+        });
+    </script>
+</body>
+</html>

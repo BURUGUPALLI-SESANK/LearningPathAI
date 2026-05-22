@@ -5,54 +5,70 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Learning Path - LearningPath AI</title>
     
+    <!-- Redirect to login if not authenticated -->
+    <script>
+        if (!localStorage.getItem('userId')) {
+            window.location.href = 'profile.html';
+        }
+    </script>
+    
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
     <!-- Custom CSS -->
     <style>
         :root {
             --primary-color: #6366f1;
-            --secondary-color: #8b5cf6;
-            --accent-color: #ec4899;
-            --dark-bg: #0f172a;
-            --light-bg: #f8fafc;
+            --primary-light: #818cf8;
+            --secondary-color: #a855f7;
+            --dark-bg: #090d16;
+            --card-bg: rgba(255, 255, 255, 0.04);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --text-muted: #a3b3c9;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: radial-gradient(circle at 50% 0%, #1e1b4b 0%, var(--dark-bg) 70%);
+            color: #f8fafc;
             min-height: 100vh;
-            padding: 2rem 0;
+            padding: 0 0 4rem;
         }
 
         .navbar {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            margin-bottom: 2rem;
+            background: rgba(9, 13, 22, 0.7);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            margin-bottom: 3rem;
         }
 
         .navbar-brand {
-            font-weight: 700;
-            font-size: 1.5rem;
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            font-weight: 800;
+            font-size: 1.6rem;
+            background: linear-gradient(135deg, var(--primary-light), var(--secondary-color));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            letter-spacing: -0.5px;
         }
 
         .nav-link {
-            font-weight: 500;
-            color: #334155 !important;
+            font-weight: 600;
+            color: #cbd5e1 !important;
             margin: 0 0.5rem;
-            transition: color 0.3s ease;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
         }
 
-        .nav-link:hover {
-            color: var(--primary-color) !important;
+        .nav-link:hover, .nav-link.active {
+            color: var(--primary-light) !important;
         }
 
         .page-container {
@@ -67,83 +83,99 @@
         }
 
         .page-title {
+            font-family: 'Outfit', sans-serif;
             font-size: 3rem;
             font-weight: 800;
             margin-bottom: 1rem;
+            letter-spacing: -1.5px;
+            background: linear-gradient(135deg, #ffffff 30%, #c7d2fe 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .page-subtitle {
             font-size: 1.2rem;
-            opacity: 0.9;
+            color: var(--text-muted);
         }
 
         .card {
-            border: none;
-            border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 24px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
             margin-bottom: 2rem;
-            transition: transform 0.3s ease;
+            overflow: hidden;
+            transition: all 0.3s ease;
         }
 
         .card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-4px);
+            border-color: rgba(99, 102, 241, 0.25);
+            box-shadow: 0 15px 35px rgba(99, 102, 241, 0.1);
         }
 
         .card-header {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: white;
-            border-radius: 20px 20px 0 0 !important;
-            padding: 1.5rem;
-            border: none;
+            background: transparent;
+            border-bottom: 1px solid var(--border-color);
+            padding: 1.5rem 2rem;
         }
 
         .card-title {
-            font-size: 1.75rem;
-            font-weight: 700;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #ffffff;
             margin: 0;
         }
 
         .card-body {
-            padding: 2rem;
+            padding: 2.5rem 2rem;
         }
 
         .skill-card {
-            background: white;
-            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 16px;
             padding: 1.5rem;
             margin-bottom: 1rem;
-            border-left: 4px solid var(--primary-color);
+            border: 1px solid var(--border-color);
+            border-left: 4px solid var(--primary-light);
             transition: all 0.3s ease;
         }
 
         .skill-card:hover {
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 5px 20px rgba(99, 102, 241, 0.1);
             transform: translateX(5px);
+            border-color: rgba(99, 102, 241, 0.2);
         }
 
         .skill-name {
+            font-family: 'Outfit', sans-serif;
             font-size: 1.25rem;
             font-weight: 700;
-            color: var(--dark-bg);
+            color: #ffffff;
             margin-bottom: 0.5rem;
         }
 
         .skill-description {
-            color: #64748b;
+            color: var(--text-muted);
             margin-bottom: 1rem;
         }
 
         .course-card {
-            background: white;
-            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 16px;
             padding: 1.5rem;
             margin-bottom: 1.5rem;
-            border: 2px solid #e2e8f0;
+            border: 1px solid var(--border-color);
             transition: all 0.3s ease;
         }
 
         .course-card:hover {
-            border-color: var(--primary-color);
+            border-color: var(--primary-light);
+            background: rgba(255, 255, 255, 0.04);
             box-shadow: 0 10px 30px rgba(99, 102, 241, 0.15);
         }
 
@@ -155,14 +187,15 @@
         }
 
         .course-title {
+            font-family: 'Outfit', sans-serif;
             font-size: 1.3rem;
             font-weight: 700;
-            color: var(--dark-bg);
+            color: #ffffff;
             margin-bottom: 0.5rem;
         }
 
         .course-provider {
-            color: #64748b;
+            color: var(--text-muted);
             font-size: 0.9rem;
         }
 
@@ -177,11 +210,11 @@
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            color: #64748b;
+            color: var(--text-muted);
         }
 
         .meta-item i {
-            color: var(--primary-color);
+            color: var(--primary-light);
         }
 
         .level-badge {
@@ -193,23 +226,23 @@
         }
 
         .level-beginner {
-            background: #fee2e2;
-            color: #991b1b;
+            background: rgba(239, 68, 68, 0.15);
+            color: #f87171;
         }
 
         .level-intermediate {
-            background: #dbeafe;
-            color: #1e40af;
+            background: rgba(59, 130, 246, 0.15);
+            color: #60a5fa;
         }
 
         .level-advanced {
-            background: #e0e7ff;
-            color: #3730a3;
+            background: rgba(168, 85, 247, 0.15);
+            color: #c084fc;
         }
 
         .duration-badge {
-            background: #d1fae5;
-            color: #065f46;
+            background: rgba(16, 185, 129, 0.15);
+            color: #34d399;
             padding: 0.5rem 1rem;
             border-radius: 20px;
             font-weight: 600;
@@ -223,12 +256,14 @@
         .progress-card {
             background: linear-gradient(135deg, #10b981, #059669);
             color: white;
-            border-radius: 15px;
+            border-radius: 16px;
             padding: 1.5rem;
             text-align: center;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
         }
 
         .progress-value {
+            font-family: 'Outfit', sans-serif;
             font-size: 2.5rem;
             font-weight: 800;
             margin: 0.5rem 0;
@@ -236,41 +271,42 @@
 
         .progress-label {
             font-size: 1rem;
-            opacity: 0.9;
+            opacity: 0.95;
         }
 
         .empty-state {
             text-align: center;
-            padding: 3rem;
-            color: #64748b;
+            padding: 4rem 2rem;
+            color: var(--text-muted);
         }
 
         .empty-state i {
             font-size: 4rem;
             margin-bottom: 1rem;
-            opacity: 0.5;
+            opacity: 0.4;
         }
 
         .btn-generate {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
             color: white;
             border: none;
             padding: 1rem 2.5rem;
-            border-radius: 50px;
+            border-radius: 14px;
             font-weight: 600;
             font-size: 1.1rem;
             transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
         }
 
         .btn-generate:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.4);
+            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.5);
             color: white;
         }
 
         @media (max-width: 768px) {
             .page-title {
-                font-size: 2rem;
+                font-size: 2.2rem;
             }
 
             .course-header {
@@ -286,7 +322,7 @@
 </head>
 <body>
     <!-- Navigation Bar -->
-    <nav class="navbar navbar-expand-lg navbar-light">
+    <nav class="navbar navbar-expand-lg">
         <div class="container">
             <a class="navbar-brand" href="index.html">
                 <i class="bi bi-graph-up-arrow"></i> LearningPath AI
@@ -306,10 +342,16 @@
                         <a class="nav-link" href="assessment.html">Assessment</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="skill-progression.html">Skill Progression</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link active" href="learning-path.html">Learning Path</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="dashboard.html">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="demo-hub.html">Demo Hub</a>
                     </li>
                 </ul>
             </div>
@@ -330,6 +372,12 @@
         <div class="text-center mb-4">
             <button class="btn btn-generate" id="generateBtn">
                 <i class="bi bi-magic"></i> Generate Learning Path
+            </button>
+            <button class="btn btn-outline-light ms-2" id="clearCacheBtn" style="display: none;">
+                <i class="bi bi-arrow-clockwise"></i> Force Regenerate (Clear Cache)
+            </button>
+            <button class="btn btn-outline-danger ms-2" id="resetProgressBtn" onclick="resetAllProgress()">
+                <i class="bi bi-trash"></i> Reset All Progress
             </button>
         </div>
 
@@ -401,9 +449,119 @@
     <!-- Bootstrap 5 JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     
+    <!-- Google Analytics Module -->
+    <script type="module">
+        import { trackLearningPathGenerated, trackCourseStart } from './analytics.js';
+        
+        // Make tracking functions available globally
+        window.trackLearningPathGenerated = trackLearningPathGenerated;
+        window.trackCourseStart = trackCourseStart;
+    </script>
+    
+    <!-- CRITICAL FIX: Nuclear reset of progress data -->
+    <script>
+        // This runs FIRST before any other JavaScript
+        (function nuclearProgressReset() {
+            console.log('🔥 NUCLEAR RESET: Checking progress data...');
+            
+            try {
+                // Get current data
+                const currentProgress = localStorage.getItem('courseProgress');
+                const currentCompleted = localStorage.getItem('completedCourses');
+                
+                console.log('Current courseProgress:', currentProgress);
+                console.log('Current completedCourses:', currentCompleted);
+                
+                // Parse and check
+                let needsReset = false;
+                
+                if (currentProgress) {
+                    try {
+                        const parsed = JSON.parse(currentProgress);
+                        // Check if any course has unexpected progress
+                        for (const [course, progress] of Object.entries(parsed)) {
+                            const num = Number(progress);
+                            if (isNaN(num) || num < 0 || num > 100) {
+                                console.warn(`⚠️ Invalid progress detected for "${course}": ${progress}`);
+                                needsReset = true;
+                                break;
+                            }
+                        }
+                    } catch (e) {
+                        console.error('❌ Failed to parse courseProgress:', e);
+                        needsReset = true;
+                    }
+                }
+                
+                // If needs reset OR if you want to force reset, uncomment the next line:
+                // needsReset = true; // FORCE RESET EVERY TIME
+                
+                if (needsReset) {
+                    console.log('🔥 RESETTING ALL PROGRESS DATA TO 0%');
+                    localStorage.setItem('courseProgress', JSON.stringify({}));
+                    localStorage.setItem('completedCourses', JSON.stringify([]));
+                    console.log('✅ Reset complete - all courses will show 0%');
+                }
+                
+            } catch (error) {
+                console.error('❌ Error in nuclear reset:', error);
+                // Force reset on error
+                localStorage.setItem('courseProgress', JSON.stringify({}));
+                localStorage.setItem('completedCourses', JSON.stringify([]));
+            }
+        })();
+    </script>
+    
     <!-- Custom JavaScript -->
     <script>
-        const API_BASE = 'http://localhost:5000';
+        // IMMEDIATE FIX: Clean corrupted progress data FIRST before anything else
+        (function cleanProgressDataImmediately() {
+            try {
+                console.log('🔧 Checking for corrupted progress data...');
+                
+                let courseProgress = JSON.parse(localStorage.getItem('courseProgress') || '{}');
+                let completedCourses = JSON.parse(localStorage.getItem('completedCourses') || '[]');
+                
+                console.log('Current progress data:', courseProgress);
+                console.log('Current completed courses:', completedCourses);
+                
+                let cleaned = false;
+                const cleanedProgress = {};
+                
+                // Check each course progress value
+                for (const [courseName, progress] of Object.entries(courseProgress)) {
+                    const numProgress = Number(progress);
+                    
+                    // Only keep valid progress values
+                    if (!isNaN(numProgress) && numProgress >= 0 && numProgress <= 100) {
+                        cleanedProgress[courseName] = numProgress;
+                    } else {
+                        console.warn(`❌ Removing invalid progress for "${courseName}": ${progress}`);
+                        cleaned = true;
+                    }
+                }
+                
+                // Save cleaned data
+                if (cleaned || Object.keys(courseProgress).length !== Object.keys(cleanedProgress).length) {
+                    localStorage.setItem('courseProgress', JSON.stringify(cleanedProgress));
+                    console.log('✅ Progress data cleaned:', cleanedProgress);
+                }
+                
+            } catch (e) {
+                console.error('❌ Error cleaning progress data:', e);
+                // Reset to empty if there's an error
+                localStorage.setItem('courseProgress', JSON.stringify({}));
+                localStorage.setItem('completedCourses', JSON.stringify([]));
+                console.log('✅ Reset to empty progress data');
+            }
+        })();
+        
+        // Auto-detect API base URL (works for both local and Vercel)
+        const API_BASE = window.location.hostname === 'localhost' 
+            ? 'http://localhost:5000' 
+            : window.location.origin + '/api';
+        
+        console.log('API Base URL:', API_BASE);
 
         // Get elements
         const generateBtn = document.getElementById('generateBtn');
@@ -452,17 +610,141 @@
         function renderCourses(courses) {
             suggestedCoursesContainer.innerHTML = '';
             
-            courses.forEach((course, index) => {
+            // Check for skill filter
+            const skillFilter = localStorage.getItem('skillFilter');
+            let filteredCourses = courses;
+            
+            if (skillFilter) {
+                const filter = JSON.parse(skillFilter);
+                console.log('Applying skill filter:', filter);
+                
+                // Filter courses by skill and level
+                filteredCourses = courses.filter(course => {
+                    const courseTitle = (course.title || '').toLowerCase();
+                    const courseDesc = (course.description || '').toLowerCase();
+                    const courseSkills = (course.skills_covered || []).map(s => s.toLowerCase());
+                    const skillName = filter.skill.toLowerCase();
+                    
+                    // Check if course matches the skill
+                    const matchesSkill = courseTitle.includes(skillName) || 
+                                       courseDesc.includes(skillName) ||
+                                       courseSkills.some(s => s.includes(skillName));
+                    
+                    // Check if course level is appropriate
+                    const courseLevel = (course.level || 'Beginner').toLowerCase();
+                    const userLevel = filter.level;
+                    
+                    let matchesLevel = true;
+                    if (userLevel <= 2) {
+                        matchesLevel = courseLevel === 'beginner' || courseLevel === 'intermediate';
+                    } else if (userLevel === 3) {
+                        matchesLevel = courseLevel === 'intermediate' || courseLevel === 'advanced';
+                    } else {
+                        matchesLevel = courseLevel === 'advanced' || courseLevel === 'intermediate';
+                    }
+                    
+                    return matchesSkill && matchesLevel;
+                });
+                
+                // Show filter info
+                const filterInfo = document.createElement('div');
+                filterInfo.className = 'alert alert-info mb-4';
+                filterInfo.style.background = 'rgba(59, 130, 246, 0.15)';
+                filterInfo.style.border = '1px solid rgba(59, 130, 246, 0.3)';
+                filterInfo.style.borderRadius = '12px';
+                filterInfo.style.color = '#e2e8f0';
+                filterInfo.innerHTML = `
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <i class="bi bi-filter-circle"></i>
+                            <strong>Filtered by:</strong> ${filter.skill} (Level ${filter.level})
+                            <span class="ms-2 badge bg-primary">${filteredCourses.length} courses</span>
+                        </div>
+                        <button class="btn btn-sm btn-outline-light" onclick="clearSkillFilter()">
+                            <i class="bi bi-x-circle"></i> Clear Filter
+                        </button>
+                    </div>
+                `;
+                suggestedCoursesContainer.parentElement.insertBefore(filterInfo, suggestedCoursesContainer);
+                
+                // Clear filter after use
+                localStorage.removeItem('skillFilter');
+            }
+            
+            if (filteredCourses.length === 0) {
+                suggestedCoursesContainer.innerHTML = `
+                    <div class="text-center py-5">
+                        <i class="bi bi-inbox" style="font-size: 3rem; opacity: 0.3; color: #64748b;"></i>
+                        <p class="mt-3" style="color: #94a3b8;">No courses found matching your criteria</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Get completed courses from localStorage
+            const completedCourses = JSON.parse(localStorage.getItem('completedCourses') || '[]');
+            
+            // Get course progress from localStorage - ENSURE IT EXISTS AND IS VALID
+            let courseProgress = {};
+            try {
+                const storedProgress = localStorage.getItem('courseProgress');
+                if (storedProgress && storedProgress !== 'undefined' && storedProgress !== 'null') {
+                    const parsed = JSON.parse(storedProgress);
+                    // Validate that all values are numbers between 0-100
+                    courseProgress = {};
+                    for (const [key, value] of Object.entries(parsed)) {
+                        const numValue = Number(value);
+                        if (!isNaN(numValue) && numValue >= 0 && numValue <= 100) {
+                            courseProgress[key] = numValue;
+                        } else {
+                            console.warn(`Invalid progress value for "${key}": ${value}, resetting to 0`);
+                            courseProgress[key] = 0;
+                        }
+                    }
+                    // Save cleaned data back
+                    localStorage.setItem('courseProgress', JSON.stringify(courseProgress));
+                } else {
+                    // Initialize empty progress object
+                    courseProgress = {};
+                    localStorage.setItem('courseProgress', JSON.stringify(courseProgress));
+                }
+            } catch (e) {
+                console.error('Error parsing courseProgress:', e);
+                courseProgress = {};
+                localStorage.setItem('courseProgress', JSON.stringify(courseProgress));
+            }
+            
+            console.log('📊 Course Progress Data:', courseProgress);
+            console.log('✅ Completed Courses:', completedCourses);
+            
+            filteredCourses.forEach((course, index) => {
                 const courseCard = document.createElement('div');
                 courseCard.className = 'course-card';
+                courseCard.style.cursor = 'pointer';
+                courseCard.onclick = () => openCourseDetail(course);
                 
                 const levelClass = `level-${String(course.level || 'Beginner').toLowerCase()}`;
+                
+                // Check if course is completed
+                const isCompleted = completedCourses.includes(course.title);
+                
+                // CRITICAL FIX: FORCE progress to 0 if not explicitly set
+                let progress = 0;
+                if (courseProgress.hasOwnProperty(course.title)) {
+                    const storedProgress = Number(courseProgress[course.title]);
+                    if (!isNaN(storedProgress) && storedProgress >= 0 && storedProgress <= 100) {
+                        progress = storedProgress;
+                    }
+                }
+                
+                console.log(`📚 Course: "${course.title}" - Progress: ${progress}%, Completed: ${isCompleted}`);
                 
                 courseCard.innerHTML = `
                     <div class="course-header">
                         <div class="flex-grow-1">
                             <div class="course-title">
                                 ${index + 1}. ${course.title}
+                                ${isCompleted ? '<span class="badge bg-success ms-2"><i class="bi bi-check-circle-fill"></i> Completed</span>' : ''}
                             </div>
                             <div class="course-provider">
                                 <i class="bi bi-building"></i> ${course.provider || 'Unknown'}
@@ -473,6 +755,20 @@
                         </span>
                     </div>
                     <p class="text-muted mb-3">${course.description || ''}</p>
+                    
+                    <!-- Progress Bar -->
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span style="color: #cbd5e1; font-size: 0.9rem;">
+                                <i class="bi bi-graph-up"></i> Progress
+                            </span>
+                            <span style="color: #ffffff; font-weight: 600; font-size: 0.9rem;">${progress}%</span>
+                        </div>
+                        <div class="progress" style="height: 8px; border-radius: 10px; background: rgba(255, 255, 255, 0.1);">
+                            <div class="progress-bar" style="width: ${progress}%; background: linear-gradient(90deg, ${isCompleted ? '#10b981' : '#6366f1'}, ${isCompleted ? '#059669' : '#a855f7'}); border-radius: 10px;"></div>
+                        </div>
+                    </div>
+                    
                     <div class="course-meta">
                         <div class="meta-item">
                             <i class="bi bi-clock"></i>
@@ -489,10 +785,30 @@
                             <span>${course.students} Students</span>
                         </div>` : ''}
                     </div>
+                    <div class="mt-3">
+                        <small class="text-primary"><i class="bi bi-cursor"></i> Click to view course details, notes & quiz</small>
+                    </div>
                 `;
                 
                 suggestedCoursesContainer.appendChild(courseCard);
             });
+        }
+
+        // Clear skill filter
+        function clearSkillFilter() {
+            localStorage.removeItem('skillFilter');
+            location.reload();
+        }
+
+        // Open course detail page
+        function openCourseDetail(course) {
+            // Track course start
+            if (window.trackCourseStart) {
+                window.trackCourseStart(course.title, course.provider);
+            }
+            
+            const courseData = encodeURIComponent(JSON.stringify(course));
+            window.location.href = `course-detail.html?course=${courseData}`;
         }
 
         // Calculate and update summary statistics from path data
@@ -543,9 +859,9 @@
 
             try {
                 generateBtn.disabled = true;
-                generateBtn.innerText = 'Generating...';
+                generateBtn.innerHTML = '<i class="bi bi-stars"></i> Generating with AI...';
 
-                const response = await fetch(`${API_BASE}/generate-path`, {
+                const response = await fetch(`${API_BASE}/ai-generate-path`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -565,14 +881,26 @@
 
                 const learningPath = result.learningPath;
 
+                // Show cache status
+                if (result.from_cache) {
+                    alert('✅ Learning path loaded from cache (instant!)');
+                } else {
+                    alert('🤖 New learning path generated with AI and saved!');
+                }
+
                 // Cache for dashboard and future visits
                 localStorage.setItem('learningPath', JSON.stringify(learningPath));
-                console.log('Learning Path Generated (backend):', learningPath);
+                console.log('Learning Path Generated (AI):', learningPath);
+                
+                // Track learning path generation
+                if (window.trackLearningPathGenerated) {
+                    window.trackLearningPathGenerated(learningPath.courses?.length || 0, true);
+                }
 
                 renderLearningPath(learningPath);
 
                 generateBtn.disabled = false;
-                generateBtn.textContent = 'Regenerate Learning Path';
+                generateBtn.innerHTML = '<i class="bi bi-arrow-clockwise"></i> Regenerate Learning Path';
             } catch (error) {
                 console.error('Network error while generating learning path:', error);
                 alert('Unable to connect to the server. Please make sure the backend is running.');
@@ -586,17 +914,74 @@
             const existingPath = localStorage.getItem('learningPath');
             if (existingPath) {
                 const pathData = JSON.parse(existingPath);
-                generateBtn.textContent = 'Regenerate Learning Path';
+                generateBtn.innerHTML = '<i class="bi bi-arrow-clockwise"></i> Regenerate Learning Path';
+                document.getElementById('clearCacheBtn').style.display = 'inline-block';
                 renderLearningPath(pathData);
             }
         }
 
         // Event listeners
         generateBtn.addEventListener('click', generateLearningPath);
+        
+        // Reset all progress function
+        function resetAllProgress() {
+            if (confirm('⚠️ This will reset ALL course progress to 0%. Are you sure?')) {
+                // Clear all progress data
+                localStorage.removeItem('courseProgress');
+                localStorage.removeItem('completedCourses');
+                
+                // Reinitialize with empty objects
+                localStorage.setItem('courseProgress', JSON.stringify({}));
+                localStorage.setItem('completedCourses', JSON.stringify([]));
+                
+                alert('✅ All progress has been reset to 0%!');
+                location.reload();
+            }
+        }
+        
+        // Clear cache and force regenerate
+        const clearCacheBtn = document.getElementById('clearCacheBtn');
+        if (clearCacheBtn) {
+            clearCacheBtn.addEventListener('click', async function() {
+                if (confirm('This will delete the cached learning path and generate a fresh one. Continue?')) {
+                    // Clear localStorage
+                    localStorage.removeItem('learningPath');
+                    
+                    // Show button as working
+                    clearCacheBtn.disabled = true;
+                    clearCacheBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> Clearing...';
+                    
+                    // Call backend to clear cache (we'll need to add this endpoint)
+                    try {
+                        const userId = localStorage.getItem('userId');
+                        const response = await fetch(`${API_BASE}/clear-cache`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ userId })
+                        });
+                        
+                        if (response.ok) {
+                            alert('✅ Cache cleared! Generating fresh learning path...');
+                            location.reload();
+                        } else {
+                            throw new Error('Failed to clear cache');
+                        }
+                    } catch (error) {
+                        console.error('Error clearing cache:', error);
+                        // Even if backend fails, we cleared localStorage
+                        alert('⚠️ Cache partially cleared. Reloading...');
+                        location.reload();
+                    }
+                }
+            });
+        }
 
         // Initialize
         checkExistingPath();
     </script>
+    
+    <!-- Floating AI Tutor Chatbot -->
+    <script src="copilot.js"></script>
 </body>
 </html>
 

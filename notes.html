@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Study Notes - LearningPath AI</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 2rem 0;
+        }
+
+        .container {
+            max-width: 900px;
+        }
+
+        .notes-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .topic-input {
+            margin-bottom: 2rem;
+        }
+
+        .generate-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            padding: 12px 30px;
+            border-radius: 10px;
+            color: white;
+            font-weight: 600;
+        }
+
+        .generate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .cache-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+        }
+
+        .notes-section {
+            margin-top: 2rem;
+        }
+
+        .concept-card {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 8px;
+        }
+
+        .exercise-card {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 8px;
+        }
+
+        .resource-link {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .resource-link:hover {
+            text-decoration: underline;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 3rem;
+        }
+
+        .spinner-border {
+            width: 3rem;
+            height: 3rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="notes-card">
+            <h1 class="text-center mb-4">
+                <i class="bi bi-journal-text text-primary"></i>
+                AI Study Notes Generator
+            </h1>
+            
+            <div class="topic-input">
+                <label for="topic" class="form-label fw-bold">Enter Topic:</label>
+                <input type="text" class="form-control form-control-lg" id="topic" 
+                       placeholder="e.g., React Hooks, Python Classes, Machine Learning Basics">
+                
+                <label for="level" class="form-label fw-bold mt-3">Your Level:</label>
+                <select class="form-select" id="level">
+                    <option value="beginner">Beginner</option>
+                    <option value="intermediate">Intermediate</option>
+                    <option value="advanced">Advanced</option>
+                </select>
+                
+                <button class="btn generate-btn w-100 mt-3" onclick="generateNotes()">
+                    <i class="bi bi-stars"></i> Generate Notes with AI
+                </button>
+            </div>
+
+            <div id="loading" class="loading" style="display: none;">
+                <div class="spinner-border text-primary" role="status"></div>
+                <p class="mt-3">Generating notes with AI...</p>
+            </div>
+
+            <div id="notes-content" style="display: none;">
+                <!-- Notes will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function generateNotes() {
+            const topic = document.getElementById('topic').value.trim();
+            const level = document.getElementById('level').value;
+
+            if (!topic) {
+                alert('Please enter a topic');
+                return;
+            }
+
+            // Show loading
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('notes-content').style.display = 'none';
+
+            try {
+                const response = await fetch('/ai-generate-notes', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ topic, level })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    displayNotes(data.notes, data.from_cache);
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            } catch (error) {
+                alert('Failed to generate notes: ' + error.message);
+            } finally {
+                document.getElementById('loading').style.display = 'none';
+            }
+        }
+
+        function displayNotes(notes, fromCache) {
+            const container = document.getElementById('notes-content');
+            
+            let html = `
+                ${fromCache ? '<span class="badge bg-success cache-badge"><i class="bi bi-check-circle"></i> Loaded from Cache</span>' : '<span class="badge bg-primary cache-badge"><i class="bi bi-stars"></i> Freshly Generated</span>'}
+                
+                <h2 class="text-primary">${notes.topic}</h2>
+                <p class="lead">${notes.summary}</p>
+
+                <hr>
+
+                <h3><i class="bi bi-lightbulb"></i> Learning Objectives</h3>
+                <ul>
+                    ${notes.learning_objectives.map(obj => `<li>${obj}</li>`).join('')}
+                </ul>
+
+                <h3 class="mt-4"><i class="bi bi-book"></i> Key Concepts</h3>
+                ${notes.key_concepts.map(concept => `
+                    <div class="concept-card">
+                        <h5>${concept.concept}</h5>
+                        <p>${concept.explanation}</p>
+                        <p class="mb-0"><strong>Example:</strong> <code>${concept.example}</code></p>
+                    </div>
+                `).join('')}
+
+                <h3 class="mt-4"><i class="bi bi-list-check"></i> Prerequisites</h3>
+                <ul>
+                    ${notes.prerequisites.map(pre => `<li>${pre}</li>`).join('')}
+                </ul>
+
+                <h3 class="mt-4"><i class="bi bi-pencil-square"></i> Practice Exercises</h3>
+                ${notes.practice_exercises.map(ex => `
+                    <div class="exercise-card">
+                        <h6><span class="badge bg-warning text-dark">${ex.difficulty}</span> ${ex.exercise}</h6>
+                        <p class="mb-0"><i class="bi bi-info-circle"></i> <strong>Hint:</strong> ${ex.hint}</p>
+                    </div>
+                `).join('')}
+
+                <h3 class="mt-4"><i class="bi bi-link-45deg"></i> Additional Resources</h3>
+                <ul>
+                    ${notes.additional_resources.map(res => `
+                        <li>
+                            <a href="${res.url}" target="_blank" class="resource-link">
+                                ${res.title}
+                            </a>
+                            <span class="badge bg-secondary">${res.type}</span>
+                        </li>
+                    `).join('')}
+                </ul>
+
+                <h3 class="mt-4"><i class="bi bi-star"></i> Pro Tips</h3>
+                <ul>
+                    ${notes.tips.map(tip => `<li>${tip}</li>`).join('')}
+                </ul>
+            `;
+
+            container.innerHTML = html;
+            container.style.display = 'block';
+        }
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
