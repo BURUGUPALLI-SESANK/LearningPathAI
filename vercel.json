@@ -1,0 +1,31 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "api/index.py",
+      "use": "@vercel/python"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/firebase-config",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/(.*\\.(html|css|js|png|jpg|jpeg|gif|svg|ico|json|csv))",
+      "dest": "path_generator/$1"
+    },
+    {
+      "src": "/",
+      "dest": "path_generator/index.html"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "path_generator/$1"
+    }
+  ]
+}
