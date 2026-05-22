@@ -28,16 +28,16 @@ This will install:
 
 2. **Edit `.env` file** with your Firebase credentials:
    ```env
-   FIREBASE_API_KEY=AIzaSyDrqjdmZ5_Y6ufncH4lGq3m6V-Pc3J5xwM
-   FIREBASE_AUTH_DOMAIN=learning-path-ai-21c57.firebaseapp.com
-   FIREBASE_PROJECT_ID=learning-path-ai-21c57
-   FIREBASE_STORAGE_BUCKET=learning-path-ai-21c57.firebasestorage.app
-   FIREBASE_MESSAGING_SENDER_ID=481873431636
-   FIREBASE_APP_ID=1:481873431636:web:84ff2b94f05844478671c1
-   FIREBASE_MEASUREMENT_ID=G-18MDLNXZK5
+   FIREBASE_API_KEY=your_firebase_api_key_here
+   FIREBASE_AUTH_DOMAIN=your-project.firebaseapp.com
+   FIREBASE_PROJECT_ID=your-project-id
+   FIREBASE_STORAGE_BUCKET=your-project.firebasestorage.app
+   FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+   FIREBASE_APP_ID=your_app_id
+   FIREBASE_MEASUREMENT_ID=your_measurement_id
    ```
 
-**✅ Your credentials are already in `.env` file!**
+**✅ Replace with your actual Firebase credentials from Firebase Console!**
 
 ---
 
@@ -46,7 +46,7 @@ This will install:
 #### **3.1 Enable Google Authentication**
 
 1. Go to: **https://console.firebase.google.com/**
-2. Select project: **learning-path-ai-21c57**
+2. Select your project
 3. Click **Authentication** in left sidebar
 4. Click **Sign-in method** tab
 5. Find **Google** provider
@@ -265,13 +265,13 @@ GET /firebase-config
 **Response:**
 ```json
 {
-  "apiKey": "AIzaSy...",
-  "authDomain": "learning-path-ai-21c57.firebaseapp.com",
-  "projectId": "learning-path-ai-21c57",
-  "storageBucket": "learning-path-ai-21c57.firebasestorage.app",
-  "messagingSenderId": "481873431636",
-  "appId": "1:481873431636:web:...",
-  "measurementId": "G-18MDLNXZK5"
+  "apiKey": "your_firebase_api_key",
+  "authDomain": "your-project.firebaseapp.com",
+  "projectId": "your-project-id",
+  "storageBucket": "your-project.firebasestorage.app",
+  "messagingSenderId": "your_sender_id",
+  "appId": "your_app_id",
+  "measurementId": "your_measurement_id"
 }
 ```
 
